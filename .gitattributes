@@ -1,0 +1,8 @@
+# Development happens on Windows, the runtime target is a Linux container.
+# Force LF so the Makefile and shell scripts stay executable inside Docker.
+* text=auto eol=lf
+
+*.png binary
+*.jpg binary
+*.joblib binary
+*.tar.xz binary

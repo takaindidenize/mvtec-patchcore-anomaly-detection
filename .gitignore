@@ -1,0 +1,34 @@
+# --- Dataset: never committed (AGENTS.md rule 2.5) ---
+# Anchored to the repo root: an unanchored "data/" would also swallow src/data/.
+/data/
+
+# --- Model artifacts: ignored except the single deployed bundle ---
+# The deployed bundle is added with an explicit negation at T11.
+/artifacts/*
+!/artifacts/.gitkeep
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.venv/
+venv/
+
+# --- Tooling caches ---
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+coverage.xml
+htmlcov/
+
+# --- Notebooks ---
+.ipynb_checkpoints/
+
+# --- Editors / OS ---
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db

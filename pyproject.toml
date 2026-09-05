@@ -1,0 +1,62 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mvtec-ad"
+version = "0.1.0"
+description = "One-class anomaly detection and localization on MVTec AD, served over a REST API."
+readme = "README.md"
+requires-python = ">=3.12"
+
+# Runtime dependencies. This list is fixed by AGENTS.md section 4.
+# Adding anything here requires the user's approval.
+dependencies = [
+    "torch",
+    "torchvision",
+    "timm",
+    "numpy",
+    "scipy",
+    "scikit-learn",
+    "Pillow",
+    "pyyaml",
+    "joblib",
+    "fastapi",
+    "uvicorn[standard]",
+    "python-multipart",
+    "pydantic>=2",
+]
+
+[project.optional-dependencies]
+# matplotlib produces figures only and must never be imported by the serving path.
+dev = [
+    "pytest",
+    "pytest-cov",
+    "ruff",
+    "tqdm",
+    "matplotlib",
+]
+
+[tool.setuptools.packages.find]
+include = ["src*"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+# Ruff also formats Python snippets embedded in Markdown. AGENTS.md is the
+# implementation contract and docs/ is prose, so Ruff is restricted to Python.
+include = ["*.py", "*.pyi", "**/pyproject.toml"]
+
+[tool.ruff.lint]
+select = [
+    "E",   # pycodestyle
+    "F",   # pyflakes
+    "I",   # isort
+    "UP",  # pyupgrade
+    "B",   # flake8-bugbear
+    "SIM", # flake8-simplify
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
