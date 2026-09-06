@@ -13,7 +13,7 @@ TORCH_CPU_INDEX := https://download.pytorch.org/whl/cpu
 
 IMAGE := mvtec-ad:latest
 
-.PHONY: setup lint format test train eval bench serve docker-build docker-run
+.PHONY: setup lint format test sanity train eval bench serve docker-build docker-run
 
 setup:
 	$(PIP) install --upgrade pip
@@ -30,6 +30,9 @@ format:
 
 test:
 	$(PYTHON) -m pytest
+
+sanity:
+	$(PYTHON) -m src.data.sanity --output results/data_sanity.md
 
 train:
 	$(PYTHON) -m src.train --config $(CONFIG) --seed $(SEED)
