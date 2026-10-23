@@ -5,7 +5,7 @@ The model is trained on defect-free images only, so this is one-class (unsupervi
 anomaly detection, not binary classification. A trained model is served over a REST
 API and packaged in a CPU-only Docker image.
 
-The implementation contract is [AGENTS.md](AGENTS.md); per-task decisions are recorded in
+Design decisions, one line per task, are recorded in
 [docs/DECISIONS.md](docs/DECISIONS.md).
 
 **Scope.** Only the `bottle` category has been trained and evaluated. Nothing below
