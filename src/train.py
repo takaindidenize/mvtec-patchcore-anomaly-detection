@@ -22,6 +22,7 @@ from src.bundle import SCHEMA_VERSION, bundle_path, current_git_commit, write_bu
 from src.calibrate import calibrate_threshold
 from src.config import Config, load_config
 from src.data.mvtec import build_dataloaders
+from src.models.autoencoder import AutoencoderModel
 from src.models.base import AnomalyModel
 from src.models.baseline_mahalanobis import MahalanobisModel
 
@@ -29,6 +30,7 @@ LOGGER = logging.getLogger(__name__)
 
 #: Model name (the `model.name` config value) -> factory. New models register here.
 MODEL_FACTORIES: dict[str, Callable[[Config], Any]] = {
+    "autoencoder": AutoencoderModel.from_config,
     "mahalanobis": MahalanobisModel.from_config,
 }
 
@@ -58,7 +60,7 @@ def make_bundle(config: Config, model: Any, val_scores: np.ndarray) -> dict[str,
         "schema_version": SCHEMA_VERSION,
         "category": config.category,
         "model_name": model.name,
-        "backbone": config.model.backbone,
+        "backbone": model.backbone_name,
         "resolved_out_indices": list(model.out_indices),
         "preprocessing": preprocessing,
         "feature_map_size": tuple(model.feature_map_size),
@@ -77,8 +79,10 @@ def make_bundle(config: Config, model: Any, val_scores: np.ndarray) -> dict[str,
 def train(config: Config, model: Any | None = None) -> Path:
     """Fit, calibrate and write `artifacts/<category>_<model>_seed<seed>.joblib`."""
     torch.manual_seed(config.seed)
-    loaders = build_dataloaders(config)
     model = model if model is not None else build_model(config)
+    loaders = build_dataloaders(
+        config, shuffle_train_fit=getattr(model, "shuffle_train_fit", False)
+    )
 
     model.fit(loaders.train_fit)
     val_scores = score_loader(model, loaders.val_normal)
