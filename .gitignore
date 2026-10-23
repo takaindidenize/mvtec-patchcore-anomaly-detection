@@ -6,6 +6,7 @@
 # The deployed bundle is added with an explicit negation at T11.
 /artifacts/*
 !/artifacts/.gitkeep
+!/artifacts/bottle_patchcore_seed0.joblib
 
 # --- Python ---
 __pycache__/
