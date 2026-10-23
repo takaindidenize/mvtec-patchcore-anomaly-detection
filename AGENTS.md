@@ -279,8 +279,11 @@ One file: `artifacts/<category>_<model_name>_seed<seed>.joblib`. Serving loads t
     "seed": int,
     "created_at": str,              # ISO 8601
     "git_commit": str,
+    "model_state": dict | None,     # model-specific weights/statistics (amendment below)
 }
 ```
+
+> **Amendment (approved by the user):** `model_state` was added because Mahalanobis statistics and autoencoder weights have no other home in the bundle, and serving must load this one file only. Recorded in `docs/DECISIONS.md`.
 
 The serving code reads preprocessing parameters from this dict. If it hardcodes them anywhere, the implementation is wrong.
 
