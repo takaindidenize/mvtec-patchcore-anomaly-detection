@@ -13,7 +13,7 @@ TORCH_CPU_INDEX := https://download.pytorch.org/whl/cpu
 
 IMAGE := mvtec-ad:latest
 
-.PHONY: setup lint format test sanity train coreset eval bench serve docker-build docker-run
+.PHONY: setup lint format test sanity train coreset eval bench readme serve docker-build docker-run
 
 setup:
 	$(PIP) install --upgrade pip
@@ -45,6 +45,9 @@ eval:
 
 bench:
 	$(PYTHON) -m src.benchmark --config $(CONFIG) --seed $(SEED)
+
+readme:
+	$(PYTHON) -m src.readme
 
 serve:
 	$(PYTHON) -m uvicorn src.api.main:app --host 0.0.0.0 --port 8000
