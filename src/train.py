@@ -25,6 +25,7 @@ from src.data.mvtec import build_dataloaders
 from src.models.autoencoder import AutoencoderModel
 from src.models.base import AnomalyModel
 from src.models.baseline_mahalanobis import MahalanobisModel
+from src.models.patchcore import PatchCoreModel
 
 LOGGER = logging.getLogger(__name__)
 
@@ -32,6 +33,7 @@ LOGGER = logging.getLogger(__name__)
 MODEL_FACTORIES: dict[str, Callable[[Config], Any]] = {
     "autoencoder": AutoencoderModel.from_config,
     "mahalanobis": MahalanobisModel.from_config,
+    "patchcore": PatchCoreModel.from_config,
 }
 
 
