@@ -27,6 +27,9 @@ htmlcov/
 # --- Notebooks ---
 .ipynb_checkpoints/
 
+# --- Personal study notes, Turkish; the repo itself stays English ---
+/notes/
+
 # --- Editors / OS ---
 .idea/
 .vscode/
