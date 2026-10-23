@@ -41,7 +41,7 @@ coreset:
 	$(PYTHON) -m src.coreset_sweep --config $(CONFIG) --seed $(SEED)
 
 eval:
-	$(PYTHON) -m src.evaluate --config $(CONFIG) --seed $(SEED)
+	$(PYTHON) -m src.run_eval --config $(CONFIG)
 
 bench:
 	$(PYTHON) -m src.benchmark --config $(CONFIG) --seed $(SEED)
