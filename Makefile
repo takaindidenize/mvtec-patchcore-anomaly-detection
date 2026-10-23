@@ -13,7 +13,7 @@ TORCH_CPU_INDEX := https://download.pytorch.org/whl/cpu
 
 IMAGE := mvtec-ad:latest
 
-.PHONY: setup lint format test sanity train eval bench serve docker-build docker-run
+.PHONY: setup lint format test sanity train coreset eval bench serve docker-build docker-run
 
 setup:
 	$(PIP) install --upgrade pip
@@ -36,6 +36,9 @@ sanity:
 
 train:
 	$(PYTHON) -m src.train --config $(CONFIG) --seed $(SEED)
+
+coreset:
+	$(PYTHON) -m src.coreset_sweep --config $(CONFIG) --seed $(SEED)
 
 eval:
 	$(PYTHON) -m src.evaluate --config $(CONFIG) --seed $(SEED)
