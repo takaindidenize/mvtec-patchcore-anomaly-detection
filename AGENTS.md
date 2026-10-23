@@ -61,6 +61,8 @@ The model must run on CPU within reasonable memory. Do not assume a GPU exists a
 
 **Development:** `pytest`, `pytest-cov`, `ruff`, `tqdm`, `matplotlib` (figures only, never in the serving path)
 
+> **Amendment (approved by the user):** `httpx` is added to the development list because FastAPI's `TestClient`, which T9 requires, depends on it. It is test-only and never imported by the serving path. Recorded in `docs/DECISIONS.md`.
+
 **Optional, Phase 3 reference run only:** `anomalib`. This is used once to obtain a reference score. It must not be a runtime dependency of the final system.
 
 Anything else requires the user's approval.

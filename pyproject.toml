@@ -35,6 +35,8 @@ dev = [
     "ruff",
     "tqdm",
     "matplotlib",
+    # FastAPI's TestClient needs it; test-only, never in the serving path.
+    "httpx",
 ]
 
 [tool.setuptools.packages.find]
