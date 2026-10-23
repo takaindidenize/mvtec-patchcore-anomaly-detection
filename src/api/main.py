@@ -16,6 +16,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
+import torch
 from fastapi import FastAPI, HTTPException, UploadFile
 from fastapi.responses import JSONResponse
 from PIL import Image, UnidentifiedImageError
@@ -83,6 +84,15 @@ def _load(path: Path) -> LoadedModel | None:
         return None
 
 
+def _warm_up(loaded: LoadedModel) -> None:
+    """One throwaway prediction, so lazy initialization does not hit the first request."""
+    size = loaded.preprocessing.center_crop
+    try:
+        loaded.model.predict(torch.zeros(1, 3, size, size))
+    except Exception:
+        LOGGER.exception("warm-up prediction failed")
+
+
 def create_app(artifact_path: str | Path | None = None) -> FastAPI:
     """Build the app. The artifact defaults to `$MODEL_ARTIFACT`, then the bottle PatchCore."""
 
@@ -90,6 +100,8 @@ def create_app(artifact_path: str | Path | None = None) -> FastAPI:
     async def lifespan(app: FastAPI) -> AsyncIterator[None]:
         path = Path(artifact_path or os.environ.get(ARTIFACT_ENV, DEFAULT_ARTIFACT))
         app.state.loaded = _load(path)
+        if app.state.loaded is not None:
+            _warm_up(app.state.loaded)
         yield
 
     app = FastAPI(title="MVTec AD anomaly detection", lifespan=lifespan)

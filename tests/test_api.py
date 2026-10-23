@@ -132,6 +132,24 @@ def test_predict_response_fields_and_heatmap_size_come_from_the_bundle(client: T
     assert heatmap.size == (CROP, CROP)
 
 
+def test_startup_warms_the_model_up(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, loads: list[int]
+) -> None:
+    seen: list[tuple[int, ...]] = []
+    original = _BrightnessModel.predict
+
+    def recording(self: _BrightnessModel, images: torch.Tensor):
+        seen.append(tuple(images.shape))
+        return original(self, images)
+
+    monkeypatch.setattr(_BrightnessModel, "predict", recording)
+    path = tmp_path / "widget_fake_seed7.joblib"
+    write_bundle(path, _bundle())
+
+    with TestClient(create_app(path)):
+        assert seen == [(1, 3, CROP, CROP)]
+
+
 def test_predict_accepts_jpeg(client: TestClient) -> None:
     response = _post(client, _image_bytes(255, "JPEG"), "image/jpeg")
     assert response.status_code == 200
